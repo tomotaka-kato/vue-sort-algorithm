@@ -53,5 +53,10 @@ export default {
          */
         // extend (config, ctx) {
         // }
+    },
+    typsecript: {
+        typeCheck: {
+            eslint: true
+        }
     }
 }
