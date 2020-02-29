@@ -14,14 +14,14 @@
           target="_blank"
           class="button--green"
         >
-          Documentation
+          Documentation!!!!!!!!!!
         </a>
         <a
           href="https://github.com/nuxt/nuxt.js"
           target="_blank"
           class="button--grey"
         >
-          GitHub
+          GitHub????
         </a>
       </div>
     </div>
