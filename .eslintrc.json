@@ -23,6 +23,8 @@
     "rules": {
         "semi": ["error", "never"],
         "quotes": ["error", "single"],
-        "indent": ["error", 4]
+        "indent": ["error", 4],
+        "space-before-function-paren": ["error", "never"],
+        "curly": ["error", "multi-line"]
     }
 }
