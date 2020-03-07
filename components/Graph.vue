@@ -84,9 +84,11 @@ class Bar {
 
 <style lang="css">
 .graph-area {
+  box-sizing: border-box;
   width: 90vw;
   overflow-x: auto;
   border: 1px solid black;
+  padding: 10px 10px 0 10px;
   display: flex;
   flex-direction: row;
   align-items: flex-end;
