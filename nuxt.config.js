@@ -32,6 +32,8 @@ export default {
      ** Plugins to load before mounting the App
      */
     plugins: [
+        // ['@babel/plugin-proposal-decorators', { legacy: true }],
+        // ['@babel/plugin-proposal-class-properties', { loose: true }]
     ],
     /*
      ** Nuxt.js dev-modules

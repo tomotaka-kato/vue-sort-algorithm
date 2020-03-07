@@ -16,7 +16,7 @@
 1. `$ docker build -t nuxt-app .`
 2. `$ docker run --rm -it -v "$PWD:/app" -p 3000:3000  nuxt-app bash`
 3. 実行環境に入れるので、下に記載してあるコマンドを利用しながら開発を行う。
-`
+
 
 ### ローカルで環境を作る場合
 1. node13以上の環境を用意する。

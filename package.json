@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^0.3.10",
-    "nuxt": "^2.0.0"
+    "nuxt": "^2.0.0",
+    "nuxt-property-decorator": "^2.5.1"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.5.8",
