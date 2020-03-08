@@ -18,6 +18,8 @@ import { Vue, Component } from 'nuxt-property-decorator'
 export default class Graph extends Vue {
   bars: Bar[] = []
 
+  timeSpan: number = 0.1
+
   mounted() {
       this.bars = this.shuffle(this.range(1, 100)).map(x => new Bar(x, false))
   }
@@ -26,48 +28,48 @@ export default class Graph extends Vue {
       return `calc(90vw / ${this.bars.length} - 2px)`
   }
 
-  index: number = 0
+  // private test() {
+  //     if (this.index >= this.bars.length) return
+  //     this.bars[this.index].isSorted = true
+  //     this.index++
+  //     setTimeout(() => {
+  //         this._bubbleSort()
+  //     }, 100)
+  // }
 
   private test() {
-      if (this.index >= this.bars.length) return
-      this.bars[this.index].isSorted = true
-      this.index++
+      const tmp = JSON.parse(JSON.stringify(this.bars))
+      this.bubbleSortRec(tmp, 0, this.bars.length - 1)
+  }
+
+  private bubbleSortRec(array: Bar[], targetIndex: number, endIndex: number) {
+      if (endIndex < 0) {
+          array[0].isSorted = true
+          this.updateGraph(array)
+          return
+      }
+
       setTimeout(() => {
-          this.test()
-      }, 100)
-  }
-
-  range = (start: number, end: number) =>
-      Array.from({ length: end - start + 1 }, (_, k) => k + start);
-
-  bubbleSort() {
-      const tmpArray = this.bars.concat()
-      // 調べる範囲の開始位置を１つずつ後ろへ移動するfor文
-      for (let i = 0; i < tmpArray.length; i++) {
-          // 後ろから前に向かって小さい値を浮かび上がらせるfor文
-          let j
-          for (j = tmpArray.length - 1; j > i; j--) {
-              // 隣りあう２つの値を比べて、後ろが小さければ交換する
-              if (tmpArray[j].value < tmpArray[j - 1].value) {
-                  const tmp = tmpArray[j]
-                  tmpArray[j] = tmpArray[j - 1]
-                  tmpArray[j - 1] = tmp
-                  this.updateGraph(tmpArray)
-                  this.sleep(1)
-              }
+          if (array[targetIndex].value > array[targetIndex + 1].value) {
+              const tmp = array[targetIndex]
+              array[targetIndex] = array[targetIndex + 1]
+              array[targetIndex + 1] = tmp
+              this.updateGraph(array)
           }
-          this.bars[j].isSorted = true
-      }
+
+          targetIndex++
+          if (targetIndex >= endIndex) {
+              array[targetIndex].isSorted = true
+              targetIndex = 0
+              endIndex--
+          }
+
+          this.bubbleSortRec(array, targetIndex, endIndex)
+      }, this.timeSpan)
   }
 
-  private sleep(waitMillisec: number) {
-      const startMsec = new Date()
-      // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
-      let spend = 0
-      while (spend < waitMillisec) {
-          spend = new Date().getTime() - startMsec.getTime()
-      }
-  }
+  private range = (start: number, end: number) =>
+      Array.from({ length: end - start + 1 }, (_, k) => k + start);
 
   private shuffle(array: number[]) {
       const out = Array.from(array)
@@ -82,6 +84,7 @@ export default class Graph extends Vue {
 
   private updateGraph(array: Bar[]) {
       this.bars = array
+      this.bars.splice(0, 0)
   }
 }
 
@@ -103,7 +106,7 @@ class Bar {
   width: 90vw;
   overflow-x: auto;
   border: 1px solid black;
-  padding: 10px 10px 0 10px;
+  padding: 10px 0 0 0;
   display: flex;
   flex-direction: row;
   align-items: flex-end;
