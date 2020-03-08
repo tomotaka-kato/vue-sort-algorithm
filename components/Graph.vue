@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="bubbleSort">
+    <button @click="test">
       ソート
     </button>
     <div class="graph-area">
@@ -26,6 +26,17 @@ export default class Graph extends Vue {
       return `calc(90vw / ${this.bars.length} - 2px)`
   }
 
+  index: number = 0
+
+  private test() {
+      if (this.index >= this.bars.length) return
+      this.bars[this.index].isSorted = true
+      this.index++
+      setTimeout(() => {
+          this.test()
+      }, 100)
+  }
+
   range = (start: number, end: number) =>
       Array.from({ length: end - start + 1 }, (_, k) => k + start);
 
@@ -41,7 +52,7 @@ export default class Graph extends Vue {
                   const tmp = tmpArray[j]
                   tmpArray[j] = tmpArray[j - 1]
                   tmpArray[j - 1] = tmp
-                  this.bars = tmpArray
+                  this.updateGraph(tmpArray)
                   this.sleep(1)
               }
           }
@@ -67,6 +78,10 @@ export default class Graph extends Vue {
           out[r] = tmp
       }
       return out
+  }
+
+  private updateGraph(array: Bar[]) {
+      this.bars = array
   }
 }
 
