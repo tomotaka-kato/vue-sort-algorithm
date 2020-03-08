@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="test">
+    <button @click="startSort">
       ソート
     </button>
     <div class="graph-area">
@@ -18,7 +18,7 @@ import { Vue, Component } from 'nuxt-property-decorator'
 export default class Graph extends Vue {
   bars: Bar[] = []
 
-  timeSpan: number = 0.1
+  timeSpan: number = 10
 
   mounted() {
       this.bars = this.shuffle(this.range(1, 100)).map(x => new Bar(x, false))
@@ -28,44 +28,44 @@ export default class Graph extends Vue {
       return `calc(90vw / ${this.bars.length} - 2px)`
   }
 
-  // private test() {
-  //     if (this.index >= this.bars.length) return
-  //     this.bars[this.index].isSorted = true
-  //     this.index++
-  //     setTimeout(() => {
-  //         this._bubbleSort()
-  //     }, 100)
-  // }
-
-  private test() {
+  private startSort() {
       const tmp = JSON.parse(JSON.stringify(this.bars))
-      this.bubbleSortRec(tmp, 0, this.bars.length - 1)
+      const arrays = this.bubbleSortRec(tmp, [tmp], 0, this.bars.length - 1)
+      this.updateGraph(arrays, 0)
   }
 
-  private bubbleSortRec(array: Bar[], targetIndex: number, endIndex: number) {
-      if (endIndex < 0) {
+  private updateGraph(arrays: Bar[][], index: number) {
+      if (index >= arrays.length) return
+      setTimeout(() => {
+          this.bars = arrays[index]
+          this.bars.splice(0, 0)
+          this.updateGraph(arrays, ++index)
+      }, this.timeSpan)
+  }
+
+  private bubbleSortRec(array: Bar[], arrays: Bar[][], targetIndex: number, endIndex: number): Bar[][] {
+      if (endIndex === 0) {
           array[0].isSorted = true
-          this.updateGraph(array)
-          return
+          arrays.push(JSON.parse(JSON.stringify(array)))
+          return arrays
       }
 
-      setTimeout(() => {
-          if (array[targetIndex].value > array[targetIndex + 1].value) {
-              const tmp = array[targetIndex]
-              array[targetIndex] = array[targetIndex + 1]
-              array[targetIndex + 1] = tmp
-              this.updateGraph(array)
-          }
+      if (array[targetIndex].value > array[targetIndex + 1].value) {
+          const tmp = array[targetIndex]
+          array[targetIndex] = array[targetIndex + 1]
+          array[targetIndex + 1] = tmp
+          arrays.push(JSON.parse(JSON.stringify(array)))
+      }
 
-          targetIndex++
-          if (targetIndex >= endIndex) {
-              array[targetIndex].isSorted = true
-              targetIndex = 0
-              endIndex--
-          }
+      targetIndex++
+      if (targetIndex === endIndex) {
+          array[targetIndex].isSorted = true
+          arrays.push(JSON.parse(JSON.stringify(array)))
+          targetIndex = 0
+          endIndex--
+      }
 
-          this.bubbleSortRec(array, targetIndex, endIndex)
-      }, this.timeSpan)
+      return this.bubbleSortRec(JSON.parse(JSON.stringify(array)), arrays, targetIndex, endIndex)
   }
 
   private range = (start: number, end: number) =>
@@ -80,11 +80,6 @@ export default class Graph extends Vue {
           out[r] = tmp
       }
       return out
-  }
-
-  private updateGraph(array: Bar[]) {
-      this.bars = array
-      this.bars.splice(0, 0)
   }
 }
 
