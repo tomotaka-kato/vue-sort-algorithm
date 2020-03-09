@@ -1,5 +1,8 @@
 <template>
   <div>
+    <button @click="shuffleBars">
+      シャッフル
+    </button>
     <button @click="startSort">
       ソート
     </button>
@@ -26,6 +29,10 @@ export default class Graph extends Vue {
 
   get barWidth() {
       return `calc(90vw / ${this.bars.length} - 2px)`
+  }
+
+  private shuffleBars() {
+      this.bars = this.shuffle(this.range(1, 100)).map(x => new Bar(x, false))
   }
 
   private startSort() {
