@@ -12,6 +12,7 @@
 4. `$ npm run start`
 5. http://localhost:3000 にアクセス
 
+## 開発する
 ### Dockerを使う場合（nuxt-appと言う名前でコンテナを作る場合）
 1. `$ docker build -t nuxt-app .`
 2. `$ docker run --rm -it -v "$PWD:/app" -p 3000:3000  nuxt-app bash`
